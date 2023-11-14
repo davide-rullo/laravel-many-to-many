@@ -59,6 +59,30 @@
     @enderror
 
 
+
+
+
+
+    <div class="mb-3">
+        <label for="technologies" class="form-label">Technologies</label>
+        <select multiple class="form-select" name="technologies[]" id="technologies">
+            <option selected>Select one</option>
+            @foreach ($technologies as $technology)
+            <option value="{{$technology->id}}">{{$technology->name}}</option>
+            @endforeach
+        </select>
+    </div>
+    @error('technologies')
+    <div class="text-danger">{{$message}}</div>
+    @enderror
+
+
+
+
+
+
+
+
     <div class="mb-3">
         <label for="description" class="form-label">Description</label>
         <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description" rows="3">{{old('description')}}</textarea>

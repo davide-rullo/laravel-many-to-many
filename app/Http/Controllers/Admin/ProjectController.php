@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +29,9 @@ class ProjectController extends Controller
     {
 
         $types = Type::all();
-        return view('admin.projects.create', compact('types'));
+        $technologies = Technology::all();
+
+        return view('admin.projects.create', compact('types', 'technologies'));
     }
 
     /**
@@ -49,7 +52,9 @@ class ProjectController extends Controller
 
         // dd($valid_data);
 
-        Project::create($valid_data);
+        $project = Project::create($valid_data);
+        $project->technologies()->attach($request->technologies);
+
         return to_route('admin.projects.index')->with('message', 'New project added');
     }
 
@@ -69,7 +74,9 @@ class ProjectController extends Controller
     {
 
         $types = Type::all();
-        return view('admin.projects.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -92,6 +99,10 @@ class ProjectController extends Controller
         }
 
         $project->update($valid_data);
+
+        if ($request->has('technologies')) {
+            $project->technologies()->sync($request->technologies);
+        }
 
 
         return to_route('admin.projects.index')->with('message', 'Project modified successfully');
