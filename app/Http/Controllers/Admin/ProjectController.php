@@ -117,6 +117,8 @@ class ProjectController extends Controller
             Storage::delete($project->cover_image);
         }
 
+        $project->technologies()->detach();
+
         $project->delete();
         return to_route('admin.projects.index')->with('message', 'Project deleted successfully');
     }
